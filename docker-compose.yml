@@ -1,0 +1,7 @@
+version: '3'
+services:
+  elchemy_test:
+    build: ./
+    tty: true
+    stdin_open: true
+    command: find app/ | egrep ".elm|.ex|.exs" | entr mix test
