@@ -1,22 +1,24 @@
+run = docker run -v "$$PWD/app":/app -it $$(basename "$$PWD") $(1)
+
 setup:
-	docker build . -t $$(basename "$$PWD")
+	docker build  . -t $$(basename "$$PWD")
 
 reset:
 	docker build . -t $$(basename "$$PWD") --no-cache
 
 test:
-	docker run -v "$$PWD/app":/app -it $$(basename "$$PWD") mix test
+	$(call run,mix test)
 
 test-watch:
-	docker run -v "$$PWD/app":/app -it $$(basename "$$PWD") sh -c "\
+	$(call run,sh -c "\
 		fsmonitor -s -p '+elm/*.elm' '+lib/*.ex*' '!*.elchemy.ex' mix test\
-		"
+		")
 
 bash:
-	docker run -v "$$PWD/app":/app -it $$(basename "$$PWD") bash
+	$(call run,bash)
 
 iex:
-	docker run -v "$$PWD/app":/app -it $$(basename "$$PWD")
+	$(call run)
 
 clean:
-	docker run -v "$$PWD/app":/app -it $$(basename "$$PWD") rm -rf .elchemy elm-deps
+	$(call run,rm -rf .elchemy elm-deps)
